@@ -2,12 +2,25 @@ import discord
 from configuration import discordconfig as discordcfg
 import webscraper
 from enums import command_enums as commands
+import sys
 
-TOKEN = discordcfg.patchy['token']
+TOKEN = ''
 
-print("token: " + TOKEN)
+try: 
+    TOKEN = sys.argv[1]
+    print("token: " + TOKEN) #debug
+except IndexError:
+    print( "Bot token is required (example command: 'python patchy.py <token>')")
+    exit()
 
 client = discord.Client()
+
+@client.event
+async def on_ready():
+    print('Logged in as')
+    print(client.user.name)
+    print(client.user.id)
+    print('------')
 
 @client.event
 async def on_message(message):
@@ -20,21 +33,25 @@ async def on_message(message):
         await message.channel.send(msg)
         return
 
-    elif message.content.startswith('!patchy'):
+    if message.content.startswith('!patchy'):
 
         splitMessage = message.content.split(" ", 1)
         print(splitMessage)
 
-        if( splitMessage[1] is None):
+        if( splitMessage[1] == 'hello' ):
+            await message.channel.send('Hello {0.author.mention}'.format(message))
             return
 
         elif( splitMessage[1] == 'sino bobo?' ):
             await message.channel.send('Walang bobo sa server na to gago.')
+            return
 
         elif( splitMessage[1] == 'sino mahal ni Pau?' ):
             await message.channel.send('Si <@512587968880312323>')
+            return
         
-        elif( splitMessage[1].split()[0] == 'valorant' ): #commands for valorant
+        #commands for valorant
+        elif( splitMessage[1].split()[0] == 'valorant' ): 
 
             splitMessage = message.content.split(" ")
 
@@ -46,12 +63,5 @@ async def on_message(message):
                     return
 
     await message.channel.send("Ha?")
-
-@client.event
-async def on_ready():
-    print('Logged in as')
-    print(client.user.name)
-    print(client.user.id)
-    print('------')
 
 client.run(TOKEN)
