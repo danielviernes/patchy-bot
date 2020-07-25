@@ -8,7 +8,6 @@ TOKEN = ''
 
 try: 
     TOKEN = sys.argv[1]
-    print("token: " + TOKEN) #debug
 except IndexError:
     print( "Bot token is required (example command: 'python patchy.py <token>')")
     exit()
@@ -47,7 +46,8 @@ async def on_message(message):
             return
 
         elif( splitMessage[1] == 'sino mahal ni Pau?' ):
-            await message.channel.send('Si <@512587968880312323>')
+            #await message.channel.send('Si <@512587968880312323>')
+            await message.channel.send('<:jaem:736577869358039080> <:jaem2:736579982280884306>')
             return
         
         #commands for valorant
@@ -61,7 +61,10 @@ async def on_message(message):
                     await message.channel.send('Ok, wait lang ssob...')
                     await message.channel.send(webscraper.getValorantVersion())
                     return
+            else:
+                await message.channel.send(webscraper.getValorantPatchNotes())
+                return
 
-    await message.channel.send("Ha?")
+        await message.channel.send("Ha?")
 
 client.run(TOKEN)
