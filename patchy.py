@@ -1,8 +1,8 @@
-import discord
-from configuration import discordconfig as discordcfg
+from discord.ext import commands as discord
 import webscraper
 from enums import command_enums as commands
 import sys
+import emojis
 
 TOKEN = ''
 
@@ -12,59 +12,52 @@ except IndexError:
     print( "Bot token is required (example command: 'python patchy.py <token>')")
     exit()
 
-client = discord.Client()
+description = '''A bot for checking patch notes'''
+bot = discord.Bot(command_prefix='!patchy ', description=description)
 
-@client.event
+@bot.event
 async def on_ready():
     print('Logged in as')
-    print(client.user.name)
-    print(client.user.id)
+    print(bot.user.name)
+    print(bot.user.id)
     print('------')
 
-@client.event
-async def on_message(message):
-    # we do not want the bot to reply to itself
-    if message.author == client.user:
+@bot.command()
+async def hello(ctx):
+    await ctx.send('Hello {0.author.mention}'.format(ctx.message))
+
+@bot.command()
+async def valorant(ctx):
+    splitMessage = ctx.message.content.split(" ")
+
+    if( len(splitMessage) > 2 ): #check if there is a third command
+        # --version, get latest game version only
+        if( splitMessage[2] == commands.Valorant.LatestVersion.value ):
+            await ctx.send('Ok, wait lang ssob...')
+            await ctx.send(webscraper.getValorantVersion())
+            return
+    else:
+        await ctx.send(webscraper.getValorantPatchNotes())
         return
 
-    if message.content.startswith('!hello'):
-        msg = 'Hello {0.author.mention}'.format(message)
-        await message.channel.send(msg)
+@bot.command()
+async def sino(ctx):
+    splitMessage = ctx.message.content.split(" ", 1)
+    print(splitMessage)
+
+    if( splitMessage[1] == 'sino bobo?' ):
+        await ctx.send('Walang bobo sa server na to gago.')
         return
 
-    if message.content.startswith('!patchy'):
+    elif( splitMessage[1] == 'sino mahal ni Pau?' ):
+        await ctx.send(
+            emojis.getEmojiByName(ctx.message.guild, 'jaem2') + " " +
+            emojis.getEmojiByName(ctx.message.guild, 'jaem') + " " +
+            emojis.getEmojiByName(ctx.message.guild, 'jaem2') + " " +
+            emojis.getEmojiByName(ctx.message.guild, 'jaem')) 
+        return
 
-        splitMessage = message.content.split(" ", 1)
-        print(splitMessage)
+    else:
+        await ctx.send( '\'Di ko alam yan' )
 
-        if( splitMessage[1] == 'hello' ):
-            await message.channel.send('Hello {0.author.mention}'.format(message))
-            return
-
-        elif( splitMessage[1] == 'sino bobo?' ):
-            await message.channel.send('Walang bobo sa server na to gago.')
-            return
-
-        elif( splitMessage[1] == 'sino mahal ni Pau?' ):
-            #await message.channel.send('Si <@512587968880312323>')
-            await message.channel.send('<:jaem:736577869358039080> <:jaem2:736579982280884306>')
-            return
-        
-        #commands for valorant
-        elif( splitMessage[1].split()[0] == 'valorant' ): 
-
-            splitMessage = message.content.split(" ")
-
-            if( len(splitMessage) > 2 ): #check if there is a third command
-                # --version, get latest game version only
-                if( splitMessage[2] == commands.Valorant.LatestVersion.value ):
-                    await message.channel.send('Ok, wait lang ssob...')
-                    await message.channel.send(webscraper.getValorantVersion())
-                    return
-            else:
-                await message.channel.send(webscraper.getValorantPatchNotes())
-                return
-
-        await message.channel.send("Ha?")
-
-client.run(TOKEN)
+bot.run(TOKEN)
