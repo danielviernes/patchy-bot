@@ -3,13 +3,14 @@ import webscraper
 from enums import command_enums as commands
 from enums import nicknames
 import sys
+import os
 import emojis
 
 TOKEN = ''
 
 try: 
-    TOKEN = sys.argv[1]
-except IndexError:
+    TOKEN = os.getenv('PATCHY_TKN')
+except (IndexError, TypeError):
     print( "Bot token is required (example command: 'python patchy.py <token>')")
     exit()
 
