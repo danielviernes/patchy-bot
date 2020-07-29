@@ -1,6 +1,7 @@
 from discord.ext import commands as discord
 import webscraper
 from enums import command_enums as commands
+from enums import nicknames
 import sys
 import emojis
 
@@ -59,5 +60,26 @@ async def sino(ctx):
 
     else:
         await ctx.send( '\'Di ko alam yan' )
+
+@bot.command()
+async def todo(ctx):
+    '''Format: !patchy todo <username>'''
+    username = ctx.message.content.split(" ")[2].lower()
+
+    todoCtr = 1
+    msg = "{name}'s To-do list\n\n"
+    todoItemFormat = "{number}. {emoji} {todo}\n"
+
+    if( username in nicknames.Jaemy._value2member_map_ ):
+        msg = msg.format(name=username)
+        for todo in nicknames.Jaemy.todo():
+            msg += todoItemFormat.format(number=todoCtr, emoji="<:x:737658641837981746>", todo=todo)
+            todoCtr += 1
+    else:
+        msg = 'Wala, lalaro na yan'
+
+
+    await ctx.send( msg )
+
 
 bot.run(TOKEN)
