@@ -5,6 +5,8 @@ from enums import nicknames
 import sys
 import os
 import emojis
+import giphy
+import random
 
 TOKEN = ''
 
@@ -82,5 +84,11 @@ async def todo(ctx):
 
     await ctx.send( msg )
 
+@bot.command()
+async def motivate(ctx):
+    queryList = ['mina', 'tzuyu', 'sana', 'nayeon', 'dahyun', 'dubu', 'jihyo', 'momo', 'jeongyeon', 'chaeyoung', 'kpop']
+    query = '{} {}'.format( 'twice', queryList[random.randint( 0, len(queryList)-1 )] )
+    await ctx.send( giphy.getRandomGif( query ) )
+    
 
 bot.run(TOKEN)
