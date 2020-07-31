@@ -1,12 +1,12 @@
 from discord.ext import commands as discord
+import sys,os,random
 import webscraper
 from enums import command_enums as commands
 from enums import nicknames
-import sys
-import os
 import emojis
 import giphy
-import random
+import randomizer
+
 
 TOKEN = ''
 
@@ -89,6 +89,57 @@ async def motivate(ctx):
     queryList = ['mina', 'tzuyu', 'sana', 'nayeon', 'dahyun', 'dubu', 'jihyo', 'momo', 'jeongyeon', 'chaeyoung', 'kpop']
     query = '{} {}'.format( 'twice', queryList[random.randint( 0, len(queryList)-1 )] )
     await ctx.send( giphy.getRandomGif( query ) )
+
+@bot.command()
+async def randomize(ctx):
+    '''Format: !patchy todo <username>'''
+    subCommand = ''
+
+    try:
+        subCommand = ctx.message.content.split(" ")[2].lower()
+    except IndexError:
+        ''' runs '!patchy randomize', no sub-command '''
+        await ctx.send( randomizer.getRandomItem() )
+        return
     
+    if( subCommand == 'add' ):
+
+        item = ''
+
+        try:
+            item = ctx.message.content.split(" ", 3)[3]
+        except IndexError:
+            await ctx.send( "No item to add\nFor a list of commands, use `!patchy randomize help`" )
+            return
+
+        randomizer.add(item)
+
+        await ctx.send( randomizer.getPrettyList() )
+
+    elif( subCommand == 'list' ):
+        
+        await ctx.send( randomizer.getPrettyList() )
+
+    elif( subCommand == 'remove' ):
+
+        try:
+            itemNumber = int(ctx.message.content.split(" ")[3])
+        except IndexError:
+            await ctx.send( "No item to remove.\nFor a list of commands, use `!patchy randomize help`" )
+            return
+        except ValueError:
+            await ctx.send( "Add the number of the item to remove.\nFor a list of commands, use `!patchy randomize help`" )
+            return
+
+        randomizer.remove(itemNumber)
+        await ctx.send( randomizer.getPrettyList() )
+
+    elif( subCommand == 'clear' ):
+        
+        randomizer.clear()
+
+    elif( subCommand == 'help' ):
+
+        await ctx.send( randomizer.help() )
 
 bot.run(TOKEN)
