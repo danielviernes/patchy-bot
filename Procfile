@@ -1,1 +1,1 @@
-worker: python patchy.py
+web: python patchy.py
