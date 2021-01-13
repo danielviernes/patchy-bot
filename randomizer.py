@@ -25,7 +25,7 @@ def getPrettyList():
     if( len( items ) < 1 ):
         return "List is empty.\nFor a list of commands, use `!patchy randomize help`"
 
-    prettyStr = "Randomizer items:\n\n"
+    prettyStr = "{emoji}Randomizer items:\n\n".format( emoji='<:game_die:738692861481975838>' )
     itemFormat = '{}. {}\n'
     ctr = 1
 

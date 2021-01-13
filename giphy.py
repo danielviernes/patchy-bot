@@ -20,4 +20,6 @@ def getRandomGif( query, limit=100 ):
     url = '{}?{}'.format( base, parse.urlencode(params) )
     print('url: ' + url)
     data=json.loads(request.urlopen(url).read())
-    return data['data'][random.randint(0, limit)]['embed_url']
+    if(len(data['data']) < limit):
+        limit = len(data['data'])
+    return data['data'][random.randint(0, limit)-1]['embed_url']

@@ -99,7 +99,7 @@ async def randomize(ctx):
         subCommand = ctx.message.content.split(" ")[2].lower()
     except IndexError:
         ''' runs '!patchy randomize', no sub-command '''
-        await ctx.send( randomizer.getRandomItem() )
+        await ctx.send( '{emoji} {item}'.format( emoji="<:game_die:738692861481975838>", item=randomizer.getRandomItem() ) )
         return
     
     if( subCommand == 'add' ):
