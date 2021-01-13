@@ -16,7 +16,7 @@ except (IndexError, TypeError):
     print( "Bot token is required (example command: 'python patchy.py <token>')")
     exit()
 
-description = '''A bot for checking patch notes'''
+description = '''A bot for Paymayan Disord server'''
 bot = discord.Bot(command_prefix='!patchy ', description=description)
 
 @bot.event
